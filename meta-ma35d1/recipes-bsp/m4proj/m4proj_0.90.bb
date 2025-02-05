@@ -2,7 +2,7 @@
 DESCRIPTION = "ma35d1 M4 BSP suppporting ma35d1 ev boards."
 DEPENDS = " gcc-arm-none-eabi-native nu-eclipse-native "
 
-inherit deploy
+inherit deploy python3native
 
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://Library/CMSIS/CMSIS_END_USER_LICENCE_AGREEMENT.pdf;md5=2cd7232123b57896151a579127c8b51b"
@@ -18,7 +18,7 @@ B =  "${WORKDIR}/build"
 export CROSS_COMPILE = "${RECIPE_SYSROOT_NATIVE}/${datadir}/gcc-arm-none-eabi/bin/arm-none-eabi-"
 export GCC_PATH = "${RECIPE_SYSROOT_NATIVE}/${datadir}/gcc-arm-none-eabi/bin"
 export NUECLIPSE = "${RECIPE_SYSROOT_NATIVE}/${datadir}/nu-eclipse"
-export DISPLAY= ":99"
+export DISPLAY= ":0"
 
 python do_compile() {
     import os
@@ -34,6 +34,7 @@ python do_compile() {
     f.write("NUECLIPSE="+d.getVar('NUECLIPSE',1))
     f.write("\n======= m480-bsp =======\n")
     for dirPath, dirNames, fileNames in os.walk("SampleCode"):
+        f.write(f"\n{dirPath}/{dirNames}/{fileNames}\n")
         for file in fnmatch.filter(fileNames, '*.cproject'):
             if not os.path.isdir(dirPath+"/Release"):
                 f.write("dirPath="+dirPath+"\n")
@@ -42,10 +43,10 @@ python do_compile() {
                 else:
                     shutil.rmtree("Temp")
                     os.mkdir("Temp")
-                cmd = d.getVar('NUECLIPSE',1)+"/eclipse/eclipse -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data Temp -cleanBuild all -import "+dirPath + "\n"
+                cmd = d.getVar('NUECLIPSE',1)+"/eclipse/eclipse -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data Temp -cleanBuild all -import "+dirPath + " \n"
                 f.write("cmd="+cmd+"\n")
                 f.flush()
-                retcode = subprocess.call(cmd,shell=True,stdout=f)
+                retcode = subprocess.call(cmd,shell=True,stdout=f, env=os.environ.copy())
                 shutil.rmtree("Temp")
     os.chdir(root)
     f.close()

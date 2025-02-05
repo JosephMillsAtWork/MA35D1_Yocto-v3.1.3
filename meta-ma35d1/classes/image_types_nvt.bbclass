@@ -10,7 +10,6 @@ do_image_nand[depends] = "virtual/trusted-firmware-a:do_deploy \
                           python3-nuwriter-native:do_install \
                           jq-native:do_populate_sysroot \
                           mtd-utils-native:do_populate_sysroot \
-                          m4proj:do_deploy \
                          "
 
 IMAGE_TYPEDEP_spinand = "ubi"
@@ -21,7 +20,6 @@ do_image_spinand[depends] = "virtual/trusted-firmware-a:do_deploy \
                              python3-nuwriter-native:do_install \
                              jq-native:do_populate_sysroot \
                              mtd-utils-native:do_populate_sysroot \
-                             m4proj:do_deploy \
                              ${@bb.utils.contains('IMAGE_FSTYPES', 'nand', '${IMAGE_BASENAME}:do_image_nand', '', d)} \
                             "
 
@@ -33,7 +31,6 @@ do_image_spinor[depends] = "virtual/trusted-firmware-a:do_deploy \
                              python3-nuwriter-native:do_install \
                              jq-native:do_populate_sysroot \
                              mtd-utils-native:do_populate_sysroot \
-                             m4proj:do_deploy \
                              ${@bb.utils.contains('IMAGE_FSTYPES', 'nand', '${IMAGE_BASENAME}:do_image_nand', '', d)} \
                              ${@bb.utils.contains('IMAGE_FSTYPES', 'spinand', '${IMAGE_BASENAME}:do_image_spinand', '', d)} \
                             "
@@ -46,13 +43,12 @@ do_image_sdcard[depends] = "parted-native:do_populate_sysroot \
                             virtual/bootloader:do_deploy \
                             python3-nuwriter-native:do_install \
                             jq-native:do_populate_sysroot \
-                            m4proj:do_deploy \
                             ${@bb.utils.contains('IMAGE_FSTYPES', 'nand', '${IMAGE_BASENAME}:do_image_nand', '', d)} \
                             ${@bb.utils.contains('IMAGE_FSTYPES', 'spinand', '${IMAGE_BASENAME}:do_image_spinand', '', d)} \
                             ${@bb.utils.contains('IMAGE_FSTYPES', 'spinor', '${IMAGE_BASENAME}:do_image_spinor', '', d)} \
                            "
 NUWRITER_DIR="${RECIPE_SYSROOT_NATIVE}${datadir}/nuwriter"
-SCP_OPJCOPY="${RECIPE_SYSROOT_NATIVE}${datadir}/gcc-arm-none-eabi/arm-none-eabi/bin/objcopy"
+## SCP_OPJCOPY="${RECIPE_SYSROOT_NATIVE}${datadir}/gcc-arm-none-eabi/arm-none-eabi/bin/objcopy"
 
 IMAGE_CMD_spinor() {
 	if [ -f ${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}-enc-spinor.pack ]; then

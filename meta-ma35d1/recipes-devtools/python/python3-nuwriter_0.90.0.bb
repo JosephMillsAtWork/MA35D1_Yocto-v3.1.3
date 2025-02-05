@@ -3,7 +3,7 @@ SUMMARY = "This is a python nuwriter for ma35d1 tool "
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e49f4652534af377a713df3d9dec60cb"
 
-inherit deploy native pypi setuptools3
+inherit deploy native pypi setuptools3 python3native
 
 SRCREV= "master"
 
@@ -43,6 +43,7 @@ DEPENDS += " \
 BBCLASSEXTEND = "native nativesdk"
 
 do_compile(){
+    export LD_LIBRARY_PATH="${STAGING_LIBDIR}"
     pyinstaller --clean --win-private-assemblies ${S}/nuwriter.py -D -n nuwriter -y --distpath ${B}
 }
 
