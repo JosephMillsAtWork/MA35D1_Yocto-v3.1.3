@@ -23,7 +23,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/tf-a-ma35d1:"
 
 inherit deploy
 
-DEPENDS += "dtc-native openssl"
+DEPENDS += "dtc-native openssl-native openssl"
 
 SUMMARY = "Trusted Firmware-A for ma35d1"
 LICENSE = "BSD-3-Clause"
